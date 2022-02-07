@@ -1,0 +1,27 @@
+{
+    "name": "techverx/contact",
+    "description": "This is a boiler plate for automation",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "alihaider55533",
+            "email": "ali.haider@techverx.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Techverx\\Contact\\ContactServiceProvider"
+            ]
+
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Techverx\\Contact\\": "src/"
+        }
+    }
+}
