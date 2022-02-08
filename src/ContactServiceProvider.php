@@ -1,6 +1,5 @@
 <?php
 namespace Techverx\Contact;
-use Illuminate\Foundation\Console\ModelMakeCommand;
 use Illuminate\Support\ServiceProvider;
 use Techverx\Contact\src\App\Console\TinkerCommand;
 
