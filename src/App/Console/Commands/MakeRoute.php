@@ -52,13 +52,13 @@ class MakeRoute extends GeneratorCommand
         $this->route = $route;
         $routename = ucwords(strtolower($this->argument('name'))).'Controller';
         $routeurl = strtolower($this->argument('name'));
-
-        $data="Route::get('/$routeurl', [$routename::class, '$routeurl']);";
+        $data="Route::get('/$routeurl', [$routename::class, '$routeurl'])";
+        $data3 = $data."->name('$routeurl');";
         $data2='use App\Http\Controllers\\'.$routename.';';
         $filecontent=file_get_contents('routes/web.php');
         $routefile=strpos($filecontent, '//My Routes');
         $routefile2=strpos($filecontent, '/*');
-        $filecontent=substr($filecontent, 0, $routefile)."\r\n".$data."\r\n".substr($filecontent, $routefile);
+        $filecontent=substr($filecontent, 0, $routefile)."\r\n".$data3."\r\n".substr($filecontent, $routefile);
         $filecontent=substr($filecontent, 0, $routefile2).$data2."\r".substr($filecontent, $routefile2)."\n";
         return file_put_contents("routes/web.php", $filecontent);
     }
@@ -82,7 +82,7 @@ class MakeRoute extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the route class.'],
+            ['name', InputArgument::OPTIONAL, 'The name of the route class.'],
         ];
     }
 }
