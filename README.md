@@ -38,5 +38,11 @@ In this command modelname could be any name e.g Post
 ```bash
 php artisan create:model modelname --all
 ```
+## Contributor
+
+- Ali Haider
+- Muhammad Ali
+- Muhammad Anas
+
 
 ### End
