@@ -30,18 +30,11 @@ class MakeRoute extends GeneratorCommand
     protected $type = 'Route';
 
     /**
-     * The name of class being generated.
-     *
-     * @var string
-     */
-    private $route;
-
-    /**
      * Replace the class name for the given stub.
      *
-     * @param string $stub
-     * @param string $name
-     * @return string
+     * @param $stub
+     * @param $name
+     * @return false|int|string
      */
     protected function replaceClass($stub, $name)
     {
@@ -49,18 +42,27 @@ class MakeRoute extends GeneratorCommand
             throw new InvalidArgumentException("Missing required argument model name");
         }
         $route = ucwords(strtolower($this->argument('name')));
-        $this->route = $route;
-        $routename = ucwords(strtolower($this->argument('name'))).'Controller';
-        $routeurl = strtolower($this->argument('name'));
-        $data="Route::get('/$routeurl', [$routename::class, '$routeurl'])";
-        $data3 = $data."->name('$routeurl');";
-        $data2='use App\Http\Controllers\\'.$routename.';';
-        $filecontent=file_get_contents('routes/web.php');
-        $routefile=strpos($filecontent, '//My Routes');
-        $routefile2=strpos($filecontent, '/*');
-        $filecontent=substr($filecontent, 0, $routefile)."\r\n".$data3."\r\n".substr($filecontent, $routefile);
-        $filecontent=substr($filecontent, 0, $routefile2).$data2."\r".substr($filecontent, $routefile2)."\n";
-        return file_put_contents("routes/web.php", $filecontent);
+        $controllerName = $route.'Controller';
+        $routeName = strtolower($this->argument('name'));
+        $route="Route::get('/$routeName', [$controllerName::class, '$routeName'])";
+        $routeWithName = $route."->name('$routeName');";
+        $importClause='use App\Http\Controllers\\'.$controllerName.';';
+        $file = 'routes/web.php';
+        $fileContent=file_get_contents($file);
+        if (strpos($fileContent, $routeWithName) !== false) {
+            $this->line('<fg=white;bg=red>Route already created!</>');
+        } else {
+            $importLocation=strpos($fileContent,  'use');
+            if ($importLocation) {
+                $fileContent=substr($fileContent, 0, $importLocation).$importClause."\r\n".substr($fileContent, $importLocation)."\n";
+            }
+            $routeLocation=strpos($fileContent, '*/')+3;
+            if ($routeLocation) {
+                $fileContent=substr($fileContent, 0, $routeLocation)."\r\n".$routeWithName."\r\n".substr($fileContent, $routeLocation);
+            }
+        }
+
+        return file_put_contents("routes/web.php", $fileContent);
     }
 
     /**
@@ -71,7 +73,7 @@ class MakeRoute extends GeneratorCommand
      */
     protected function getStub()
     {
-        return base_path('routes/web.php');
+        return base_path('/app/Console/stubs/routes');
     }
 
     /**

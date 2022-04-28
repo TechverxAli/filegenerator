@@ -2,7 +2,6 @@
 
 namespace DummyNamespace;
 use App\Repositories\DummyRepo;
-use App\Dummy;
 
 class DummyService extends BaseService
 {

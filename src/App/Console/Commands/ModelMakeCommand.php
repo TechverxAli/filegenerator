@@ -125,15 +125,27 @@ class ModelMakeCommand extends GeneratorCommand
     protected function createMigration()
     {
         $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
-
+        $name = strtolower(Str::studly(class_basename($this->argument('name'))));
         if ($this->option('pivot')) {
             $table = Str::singular($table);
         }
-
-        $this->call('make:migration', [
-            'name' => "create_{$table}_table",
-            '--create' => $table,
-        ]);
+        $fileList = glob('database/migrations/*');
+        $state = '';
+        foreach($fileList as $filename){
+            if (file_exists(base_path($filename))) {
+                if(strpos($filename, $name) !== false){
+                    $state = true;
+                }
+            }
+        }
+        if ($state) {
+            $this->line('<fg=white;bg=red>Migration already created!</>');
+        } else {
+            $this->call('make:migration', [
+                'name' => "create_{$table}_table",
+                '--create' => $table,
+            ]);
+        }
     }
 
     /**
@@ -251,10 +263,11 @@ class ModelMakeCommand extends GeneratorCommand
     protected function createRoute()
     {
         $route = Str::studly(class_basename($this->argument('name')));
-
         $this->call('make:route', [
             'name' => "{$route}",
         ]);
+        unlink(base_path('app/'. $route . '.php'));
+
     }
 
     /**

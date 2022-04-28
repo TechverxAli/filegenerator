@@ -9,6 +9,12 @@
             "email": "ali.haider@techverx.com"
         }
     ],
+    "modified-by": [
+        {
+            "name": "Muhammad Anas",
+            "email": "m.anas@techverx.com"
+        }
+    ],
     "extra": {
         "laravel": {
             "providers": [
